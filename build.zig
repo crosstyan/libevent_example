@@ -110,7 +110,10 @@ pub fn build(b: *std.Build) void {
         std.debug.print("Header file {s} has not changed. \n", .{src_path});
     }
     // ******* End of Add C binding *******
-
+    // remember to link libC
+    // The build would sucess even if you don't do that
+    // but it would segv.
+    exe.linkLibC();
     exe.linkSystemLibrary("event_core");
     exe.linkSystemLibrary("event_extra");
     exe.install();

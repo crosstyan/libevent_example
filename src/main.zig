@@ -10,7 +10,7 @@ pub fn say_something(fd: c_int, events: c_short, arg: ?*anyopaque) callconv(.C) 
     _ = events;
     var cast = @alignCast(@alignOf(*SomeThing), arg.?);
     var thing = @ptrCast(*SomeThing, cast);
-    std.debug.print("Say {s}, counter: {d}", .{ thing.content, thing.counter.* });
+    std.debug.print("Say: \"{s}\"\tcounter: {d}\n", .{ thing.content, thing.counter.* });
     thing.counter.* += 1;
 }
 
@@ -18,6 +18,7 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
     var p = try allocator.create(u32);
+    p.* = 0;
     defer allocator.destroy(p);
     var thing = try allocator.create(SomeThing);
     defer allocator.destroy(thing);
