@@ -111,9 +111,8 @@ pub fn build(b: *std.Build) void {
     }
     // ******* End of Add C binding *******
 
-    // This declares intent for the executable to be installed into the
-    // standard location when the user invokes the "install" step (the default
-    // step when running `zig build`).
+    exe.linkSystemLibrary("event_core");
+    exe.linkSystemLibrary("event_extra");
     exe.install();
 
     // This *creates* a RunStep in the build graph, to be executed when another
