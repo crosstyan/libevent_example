@@ -17,9 +17,14 @@ pub fn say_something(fd: c_int, events: c_short, thing: *SomeThing) callconv(.C)
     }
 }
 
+// You could do that? Return a type and apply it
+fn event_callback(comptime T: type) type {
+    return *const fn (c_int, c_short, *T) callconv(.C) void;
+}
+
 // Marking your functions with the C calling convention is crucial when you’re calling Zig from C.
 /// A type safe `event_new`
-pub fn event_new(base: *c.event_base, fd: c_int, events: c_short, comptime T: type, callback: *const fn (c_int, c_short, *T) callconv(.C) void, callback_arg: *T) ?*c.event {
+pub fn event_new(base: *c.event_base, fd: c_int, events: c_short, comptime T: type, callback: event_callback(T), callback_arg: *T) ?*c.event {
     var cb = @ptrCast(c.event_callback_fn, callback);
     var arg = @ptrCast(*anyopaque, callback_arg);
     return c.event_new(base, fd, events, cb, arg);
