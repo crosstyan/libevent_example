@@ -9,10 +9,10 @@ const SomeThing = struct {
 pub fn say_something(fd: c_int, events: c_short, thing: *SomeThing) callconv(.C) void {
     _ = fd;
     _ = events;
-    // https://www.reddit.com/r/Zig/comments/1119m6g/what_does_aligncast_do/
+    const max_called = 5;
     std.debug.print("Say: \"{s}\"\tcounter: {d}\n", .{ thing.content, thing.counter.* });
     thing.counter.* += 1;
-    if (thing.counter.* > 5 and thing.event != null) {
+    if (thing.counter.* >= max_called and thing.event != null) {
         _ = c.event_del(thing.event);
     }
 }

@@ -20,10 +20,11 @@ int main(void) {
   auto base = event_base_new();
   auto tv = timeval{1, 0};
   auto say_something = [](int fd, short int events, void *arg){
+    const auto max_called = 5;
     auto thing = static_cast<SomeThing*>(arg);
     std::cout << "Say: " << *thing->content << "\t" << "counter: " << *thing->counter << "\n";
     *thing->counter += 1;
-    if (*thing->counter > 5 && thing->ev != nullptr){
+    if (*thing->counter >= max_called && thing->ev != nullptr){
       event_del(thing->ev);
     }
   };
